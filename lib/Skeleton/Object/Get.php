@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * trait: Get
  *
@@ -103,9 +106,9 @@ trait Get {
 		if (get_called_class()::trait_cache_enabled()) {
 			$prefix = get_called_class()::trait_get_cache_prefix();
 			try {
-				$object = get_called_class()::cache_get($prefix . '_' . $id);
-				return $object;
-			} catch (\Exception $e) { }
+				return get_called_class()::cache_get($prefix . '_' . $id);
+			} catch (\Exception $e) {
+			}
 		}
 
 		$classname = get_called_class();

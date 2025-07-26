@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * trait: Cache
  *
@@ -25,9 +28,8 @@ class Memcached implements \Skeleton\Object\Cache\HandlerInterface {
 		$var = $handler_object->get($key);
 		if ($var === false) {
 			throw new \Exception('Object not in cache');
-		} else {
-			return $var;
 		}
+		return $var;
 	}
 
 	/**

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * trait: Slug
  *
@@ -75,7 +78,7 @@ trait Slug {
 				$object = self::get_by_slug($slug);
 
 				if ($this->id === null || $this->id !== $object->id) {
-					$slug = $slug . bin2hex(random_bytes(1));
+					$slug .= bin2hex(random_bytes(1));
 				}
 			} catch (\Exception $e) {
 				// If the slug was not found, we're good to go

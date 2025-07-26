@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * trait: generate_uuid
  *
@@ -45,7 +48,7 @@ trait Uuid {
 			} catch (\Exception $e) {
 				$unique = true;
 			}
-		} while ($unique = false);
+		} while ($unique === false);
 
 		return $uuid;
 	}

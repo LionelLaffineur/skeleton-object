@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * trait: Child
  *
@@ -98,7 +101,8 @@ trait Child {
 		if (property_exists(self::class, 'class_configuration') and is_array(self::$class_configuration)) {
 			if (array_key_exists('database_table', self::$class_configuration) and self::$class_configuration['database_table'] === null) {
 				return null;
-			} elseif (isset(self::$class_configuration['database_table'])) {
+			}
+			if (isset(self::$class_configuration['database_table'])) {
 				return self::$class_configuration['database_table'];
 			}
 		}
@@ -115,8 +119,7 @@ trait Child {
 	public static function trait_get_parent_table_field_id() {
 		if (property_exists(self::class, 'class_configuration') and isset(self::$class_configuration['parent_field_id'])) {
 			return self::$class_configuration['parent_field_id'];
-		} else {
-			return strtolower((new \ReflectionClass(self::class))->getParentClass()->getShortName() . '_id');
 		}
+		return strtolower((new \ReflectionClass(self::class))->getParentClass()->getShortName() . '_id');
 	}
 }

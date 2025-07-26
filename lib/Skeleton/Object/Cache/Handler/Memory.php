@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * trait: Cache
  *
@@ -10,19 +13,18 @@
 namespace Skeleton\Object\Cache\Handler;
 
 class Memory implements \Skeleton\Object\Cache\HandlerInterface {
+	private static ?Memory $memory = null;
 
-	private static $memory = null;
-
-	private $details = [];
+	private array $details = [];
 
 	/**
 	 * __get
 	 *
 	 * @access public
-	 * @param string $key
+	 * @param string $key key
 	 * @return mixed $value
 	 */
-	public function __get($key) {
+	public function __get(string $key): mixed {
 		if (!isset($this->details[$key])) {
 			throw new \Exception('Unknown key ' . $key);
 		}
@@ -33,10 +35,10 @@ class Memory implements \Skeleton\Object\Cache\HandlerInterface {
 	 * __set
 	 *
 	 * @access public
-	 * @param string $key
-	 * @param mixed $value
+	 * @param string $key key
+	 * @param mixed $value value
 	 */
-	public function __set($key, $value) {
+	public function __set(string $key, mixed $value): void {
 		$this->details[$key] = $value;
 	}
 
@@ -44,9 +46,10 @@ class Memory implements \Skeleton\Object\Cache\HandlerInterface {
 	 * __isset
 	 *
 	 * @access public
-	 * @param string $key
+	 * @param string $key key
+	 * @return bool isset
 	 */
-	public function __isset($key) {
+	public function __isset(string $key): bool {
 		if (isset($this->details[$key])) {
 			return true;
 		}
@@ -58,7 +61,7 @@ class Memory implements \Skeleton\Object\Cache\HandlerInterface {
 	 *
 	 * @access public
 	 */
-	public function clear() {
+	public function clear(): void {
 		$this->details = [];
 	}
 
@@ -66,31 +69,31 @@ class Memory implements \Skeleton\Object\Cache\HandlerInterface {
 	 * Get from objectcache
 	 *
 	 * @access public
-	 * @param string $key
-	 * @return mixed
+	 * @param string $key key
+	 * @return mixed object
 	 */
-	public static function get($key) {
+	public static function get(string $key): mixed {
 		$memory = self::fetch();
 		if (isset($memory->$key)) {
 			return $memory->$key;
-		} else {
-			throw new \Exception('Object not in cache');
 		}
+		throw new \Exception('Object not in cache');
 	}
 
 	/**
 	 * Get multi from objectcache
 	 *
 	 * @access public
-	 * @param array $keys
-	 * @return mixed
+	 * @param array<string> $keys keys
+	 * @return array<mixed>
 	 */
-	public static function multi_get($keys) {
+	public static function multi_get(array $keys): array {
 		$result = [];
 		foreach ($keys as $key) {
 			try {
 				$result[] = self::get($key);
-			} catch (\Exception $e) {}
+			} catch (\Exception $e) {
+			}
 		}
 		return $result;
 	}
@@ -99,10 +102,10 @@ class Memory implements \Skeleton\Object\Cache\HandlerInterface {
 	 * Put
 	 *
 	 * @access public
-	 * @param string $key
-	 * @param mixed $value
+	 * @param string $key key
+	 * @param mixed $value object
 	 */
-	public static function set($key, $value) {
+	public static function set(string $key, mixed $value): void {
 		$memory = self::fetch();
 		$memory->$key = $value;
 	}
@@ -111,9 +114,9 @@ class Memory implements \Skeleton\Object\Cache\HandlerInterface {
 	 * Delete
 	 *
 	 * @access public
-	 * @param string $key
+	 * @param string $key key
 	 */
-	public static function delete($key) {
+	public static function delete(string $key): void {
 		$memory = self::fetch();
 		unset($memory->$key);
 	}
@@ -123,7 +126,7 @@ class Memory implements \Skeleton\Object\Cache\HandlerInterface {
 	 *
 	 * @access public
 	 */
-	public static function flush() {
+	public static function flush(): void {
 		$memory = self::fetch();
 		$memory->clear();
 	}
@@ -134,12 +137,11 @@ class Memory implements \Skeleton\Object\Cache\HandlerInterface {
 	 * @access public
 	 * @return Memcache $memcache
 	 */
-	public static function fetch() {
+	public static function fetch(): Memcache {
 		if (self::$memory === null) {
 			self::$memory = new self();
 		}
 
 		return self::$memory;
 	}
-
 }
