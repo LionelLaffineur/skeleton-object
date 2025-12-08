@@ -11,7 +11,18 @@ namespace Skeleton\Object\Cache\Handler;
 
 class Memcached implements \Skeleton\Object\Cache\HandlerInterface {
 
+	/**
+	 * Local Memcached instance
+	 */
 	protected static $handler_object = null;
+
+	/**
+	 * PID in which the local memcached instance was created
+	 *
+	 * If it is not ours, it has been recycled and we want to force a new
+	 * connection.
+	 */
+	protected static ?int $handler_object_pid = null;
 
 	/**
 	 * Get from objectcache
@@ -88,8 +99,11 @@ class Memcached implements \Skeleton\Object\Cache\HandlerInterface {
 	 * @return Memcache $handler_object
 	 */
 	public static function connect() {
-		if (self::$handler_object === null) {
+		if (self::$handler_object === null || self::$handler_object_pid !== getmypid()) {
 			$config = \Skeleton\Object\Config::$cache_handler_config;
+
+			self::$handler_object_pid = getmypid();
+
 			self::$handler_object = new \Memcached();
 			self::$handler_object->setOption(\Memcached::OPT_VERIFY_KEY, true);
 			self::$handler_object->setOption(\Memcached::OPT_SERIALIZER, \Memcached::SERIALIZER_IGBINARY);

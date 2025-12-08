@@ -50,8 +50,11 @@ class Memcache extends \Skeleton\Object\Cache\Handler\Memcached {
 	 * @return Memcache $handler_object
 	 */
 	public static function connect() {
-		if (self::$handler_object === null) {
+		if (self::$handler_object === null || self::$handler_object_pid !== getmypid()) {
 			$config = \Skeleton\Object\Config::$cache_handler_config;
+
+			self::$handler_object_pid = getmypid();
+
 			self::$handler_object = new \Memcache();
 			self::$handler_object->connect($config['hostname'], $config['port']);
 		}
