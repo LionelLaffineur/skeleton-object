@@ -77,6 +77,10 @@ trait Slug {
 				if ($this->id === null || $this->id !== $object->id) {
 					$slug = $slug . bin2hex(random_bytes(1));
 				}
+
+				if ($this->id !== null && $this->id === $object->id) {
+					throw new \Exception('Nothing has changed');
+				}
 			} catch (\Exception $e) {
 				// If the slug was not found, we're good to go
 				break;
