@@ -52,11 +52,9 @@ trait Save {
 				$this->details[ self::trait_get_table_field_created() ] = date('Y-m-d H:i:s');
 			}
 		} else {
-			if (!$this->is_dirty( self::trait_get_table_field_updated() )) {
-				$updated_field = self::trait_get_table_field_updated();
-				if ($updated_field !== null) {
-					$this->details[ $updated_field ] = date('Y-m-d H:i:s');
-				}
+			$updated_field = self::trait_get_table_field_updated();
+			if (!$this->is_dirty($updated_field) && $updated_field !== null) {
+				$this->details[$updated_field] = date('Y-m-d H:i:s');
 			}
 		}
 
